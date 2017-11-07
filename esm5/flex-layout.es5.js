@@ -5,42 +5,19 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('@angular/platform-browser'), require('rxjs/operators'), require('@angular/common'), require('rxjs/BehaviorSubject'), require('rxjs/ReplaySubject')) :
-	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', '@angular/platform-browser', 'rxjs/operators', '@angular/common', 'rxjs/BehaviorSubject', 'rxjs/ReplaySubject'], factory) :
-	(factory((global.ng = global.ng || {}, global.ng['flex-layout'] = global.ng['flex-layout'] || {}),global.ng.core,global.ng.platformBrowser,global.Rx.Observable,global.ng.common,global.Rx,global.Rx));
-}(this, (function (exports,_angular_core,_angular_platformBrowser,rxjs_operators,_angular_common,rxjs_BehaviorSubject,rxjs_ReplaySubject) { 'use strict';
-
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
-
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
-
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-var extendStatics = Object.setPrototypeOf ||
-    ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-    function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-
-function __extends(d, b) {
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
+import { Directive, ElementRef, Inject, Injectable, InjectionToken, Input, IterableDiffers, KeyValueDiffers, NgModule, NgZone, Optional, Renderer2, SecurityContext, Self, SimpleChange, SkipSelf, Version } from '@angular/core';
+import { DomSanitizer, ɵgetDOM } from '@angular/platform-browser';
+import { filter, map } from 'rxjs/operators';
+import { __extends } from 'tslib';
+import * as tslib_1 from 'tslib';
+import { DOCUMENT, NgClass, NgStyle } from '@angular/common';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 /**
  * Current version of Angular Flex-Layout.
  */
-var VERSION = new _angular_core.Version('2.0.0-beta.9-e3b7fde');
+var VERSION = new Version('2.0.0-beta.9-e3b7fde');
 
 var LAYOUT_VALUES = ['row', 'column', 'row-reverse', 'column-reverse'];
 /**
@@ -239,7 +216,7 @@ function applyMultiValueStyleToElement(styles, element, renderer) {
  * @return {?}
  */
 function lookupAttributeValue(element, attribute) {
-    return _angular_platformBrowser.ɵgetDOM().getAttribute(element, attribute) || '';
+    return ɵgetDOM().getAttribute(element, attribute) || '';
 }
 /**
  * Find the DOM element's inline style value (if any)
@@ -248,7 +225,7 @@ function lookupAttributeValue(element, attribute) {
  * @return {?}
  */
 function lookupInlineStyle(element, styleName) {
-    return _angular_platformBrowser.ɵgetDOM().getStyle(element, styleName);
+    return ɵgetDOM().getStyle(element, styleName);
 }
 /**
  * Determine the inline or inherited CSS style
@@ -264,7 +241,7 @@ function lookupStyle(element, styleName, inlineOnly) {
         try {
             var /** @type {?} */ immediateValue = value = lookupInlineStyle(element, styleName);
             if (!inlineOnly) {
-                value = immediateValue || _angular_platformBrowser.ɵgetDOM().getComputedStyle(element).getPropertyValue(styleName);
+                value = immediateValue || ɵgetDOM().getComputedStyle(element).getPropertyValue(styleName);
             }
         }
         catch (e) {
@@ -436,7 +413,7 @@ var ResponsiveActivation = (function () {
                     change.property = _this._options.baseKey;
                     return change;
                 };
-                subscriptions.push(_this.mediaMonitor.observe(bp.alias).pipe(rxjs_operators.map(buildChanges))
+                subscriptions.push(_this.mediaMonitor.observe(bp.alias).pipe(map(buildChanges))
                     .subscribe(function (change) {
                     _this._onMonitorEvents(change);
                 }));
@@ -594,7 +571,7 @@ var BaseFxDirective = (function () {
                 previousVal = this._inputMap[key];
                 this._inputMap[key] = value;
             }
-            var /** @type {?} */ change = new _angular_core.SimpleChange(previousVal, value, false);
+            var /** @type {?} */ change = new SimpleChange(previousVal, value, false);
             this.ngOnChanges(/** @type {?} */ (_a = {}, _a[key] = change, _a));
             var _a;
         },
@@ -979,7 +956,7 @@ var BaseFxDirectiveAdapter = (function (_super) {
  *  Injection token unique to the flex-layout library.
  *  Use this token when build a custom provider (see below).
  */
-var BREAKPOINTS = new _angular_core.InjectionToken('Token (@angular/flex-layout) Breakpoints');
+var BREAKPOINTS = new InjectionToken('Token (@angular/flex-layout) Breakpoints');
 
 /**
  * Registry of 1..n MediaQuery breakpoint ranges
@@ -1073,13 +1050,13 @@ var BreakPointRegistry = (function () {
         configurable: true
     });
     BreakPointRegistry.decorators = [
-        { type: _angular_core.Injectable },
+        { type: Injectable },
     ];
     /**
      * @nocollapse
      */
     BreakPointRegistry.ctorParameters = function () { return [
-        { type: Array, decorators: [{ type: _angular_core.Inject, args: [BREAKPOINTS,] },] },
+        { type: Array, decorators: [{ type: Inject, args: [BREAKPOINTS,] },] },
     ]; };
     return BreakPointRegistry;
 }());
@@ -1130,7 +1107,7 @@ var MatchMedia = (function () {
         this._zone = _zone;
         this._document = _document;
         this._registry = new Map();
-        this._source = new rxjs_BehaviorSubject.BehaviorSubject(new MediaChange(true));
+        this._source = new BehaviorSubject(new MediaChange(true));
         this._observable$ = this._source.asObservable();
     }
     /**
@@ -1156,7 +1133,7 @@ var MatchMedia = (function () {
         if (mediaQuery) {
             this.registerQuery(mediaQuery);
         }
-        return this._observable$.pipe(rxjs_operators.filter(function (change) {
+        return this._observable$.pipe(filter(function (change) {
             return mediaQuery ? (change.mediaQuery === mediaQuery) : true;
         }));
     };
@@ -1208,14 +1185,14 @@ var MatchMedia = (function () {
         });
     };
     MatchMedia.decorators = [
-        { type: _angular_core.Injectable },
+        { type: Injectable },
     ];
     /**
      * @nocollapse
      */
     MatchMedia.ctorParameters = function () { return [
-        { type: _angular_core.NgZone, },
-        { type: undefined, decorators: [{ type: _angular_core.Inject, args: [_angular_common.DOCUMENT,] },] },
+        { type: NgZone, },
+        { type: undefined, decorators: [{ type: Inject, args: [DOCUMENT,] },] },
     ]; };
     return MatchMedia;
 }());
@@ -1224,7 +1201,7 @@ var MatchMedia = (function () {
  * @return {?}
  */
 function isBrowser() {
-    return _angular_platformBrowser.ɵgetDOM().supportsDOMEvents();
+    return ɵgetDOM().supportsDOMEvents();
 }
 /**
  * Private global registry for all dynamically-created, injected style tags
@@ -1244,13 +1221,13 @@ function prepareQueryCSS(mediaQueries, _document) {
     if (list.length > 0) {
         var /** @type {?} */ query = list.join(', ');
         try {
-            var /** @type {?} */ styleEl_1 = _angular_platformBrowser.ɵgetDOM().createElement('style');
-            _angular_platformBrowser.ɵgetDOM().setAttribute(styleEl_1, 'type', 'text/css');
+            var /** @type {?} */ styleEl_1 = ɵgetDOM().createElement('style');
+            ɵgetDOM().setAttribute(styleEl_1, 'type', 'text/css');
             if (!styleEl_1['styleSheet']) {
                 var /** @type {?} */ cssText = "/*\n  @angular/flex-layout - workaround for possible browser quirk with mediaQuery listeners\n  see http://bit.ly/2sd4HMP\n*/\n@media " + query + " {.fx-query-test{ }}";
-                _angular_platformBrowser.ɵgetDOM().appendChild(styleEl_1, _angular_platformBrowser.ɵgetDOM().createTextNode(cssText));
+                ɵgetDOM().appendChild(styleEl_1, ɵgetDOM().createTextNode(cssText));
             }
-            _angular_platformBrowser.ɵgetDOM().appendChild(_document.head, styleEl_1);
+            ɵgetDOM().appendChild(_document.head, styleEl_1);
             // Store in private global registry
             list.forEach(function (mq) { return ALL_STYLES[mq] = styleEl_1; });
         }
@@ -1384,7 +1361,7 @@ var MediaMonitor = (function () {
         var /** @type {?} */ hasAlias = function (change) { return (bp ? change.mqAlias !== '' : true); };
         // Note: the raw MediaChange events [from MatchMedia] do not contain important alias information
         var /** @type {?} */ media$ = this._matchMedia.observe(bp ? bp.mediaQuery : alias);
-        return media$.pipe(rxjs_operators.map(function (change) { return mergeAlias(change, bp); }), rxjs_operators.filter(hasAlias));
+        return media$.pipe(map(function (change) { return mergeAlias(change, bp); }), filter(hasAlias));
     };
     /**
      * Immediate calls to matchMedia() to establish listeners
@@ -1396,7 +1373,7 @@ var MediaMonitor = (function () {
         this._matchMedia.registerQuery(queries);
     };
     MediaMonitor.decorators = [
-        { type: _angular_core.Injectable },
+        { type: Injectable },
     ];
     /**
      * @nocollapse
@@ -1425,7 +1402,7 @@ var LayoutDirective = (function (_super) {
      */
     function LayoutDirective(monitor, elRef, renderer) {
         var _this = _super.call(this, monitor, elRef, renderer) || this;
-        _this._announcer = new rxjs_ReplaySubject.ReplaySubject(1);
+        _this._announcer = new ReplaySubject(1);
         _this.layout$ = _this._announcer.asObservable();
         return _this;
     }
@@ -1610,31 +1587,31 @@ var LayoutDirective = (function (_super) {
         this._announcer.next(css['flex-direction']);
     };
     LayoutDirective.decorators = [
-        { type: _angular_core.Directive, args: [{ selector: "\n  [fxLayout],\n  [fxLayout.xs], [fxLayout.sm], [fxLayout.md], [fxLayout.lg], [fxLayout.xl],\n  [fxLayout.lt-sm], [fxLayout.lt-md], [fxLayout.lt-lg], [fxLayout.lt-xl],\n  [fxLayout.gt-xs], [fxLayout.gt-sm], [fxLayout.gt-md], [fxLayout.gt-lg]\n" },] },
+        { type: Directive, args: [{ selector: "\n  [fxLayout],\n  [fxLayout.xs], [fxLayout.sm], [fxLayout.md], [fxLayout.lg], [fxLayout.xl],\n  [fxLayout.lt-sm], [fxLayout.lt-md], [fxLayout.lt-lg], [fxLayout.lt-xl],\n  [fxLayout.gt-xs], [fxLayout.gt-sm], [fxLayout.gt-md], [fxLayout.gt-lg]\n" },] },
     ];
     /**
      * @nocollapse
      */
     LayoutDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
+        { type: ElementRef, },
+        { type: Renderer2, },
     ]; };
     LayoutDirective.propDecorators = {
-        'layout': [{ type: _angular_core.Input, args: ['fxLayout',] },],
-        'layoutXs': [{ type: _angular_core.Input, args: ['fxLayout.xs',] },],
-        'layoutSm': [{ type: _angular_core.Input, args: ['fxLayout.sm',] },],
-        'layoutMd': [{ type: _angular_core.Input, args: ['fxLayout.md',] },],
-        'layoutLg': [{ type: _angular_core.Input, args: ['fxLayout.lg',] },],
-        'layoutXl': [{ type: _angular_core.Input, args: ['fxLayout.xl',] },],
-        'layoutGtXs': [{ type: _angular_core.Input, args: ['fxLayout.gt-xs',] },],
-        'layoutGtSm': [{ type: _angular_core.Input, args: ['fxLayout.gt-sm',] },],
-        'layoutGtMd': [{ type: _angular_core.Input, args: ['fxLayout.gt-md',] },],
-        'layoutGtLg': [{ type: _angular_core.Input, args: ['fxLayout.gt-lg',] },],
-        'layoutLtSm': [{ type: _angular_core.Input, args: ['fxLayout.lt-sm',] },],
-        'layoutLtMd': [{ type: _angular_core.Input, args: ['fxLayout.lt-md',] },],
-        'layoutLtLg': [{ type: _angular_core.Input, args: ['fxLayout.lt-lg',] },],
-        'layoutLtXl': [{ type: _angular_core.Input, args: ['fxLayout.lt-xl',] },],
+        'layout': [{ type: Input, args: ['fxLayout',] },],
+        'layoutXs': [{ type: Input, args: ['fxLayout.xs',] },],
+        'layoutSm': [{ type: Input, args: ['fxLayout.sm',] },],
+        'layoutMd': [{ type: Input, args: ['fxLayout.md',] },],
+        'layoutLg': [{ type: Input, args: ['fxLayout.lg',] },],
+        'layoutXl': [{ type: Input, args: ['fxLayout.xl',] },],
+        'layoutGtXs': [{ type: Input, args: ['fxLayout.gt-xs',] },],
+        'layoutGtSm': [{ type: Input, args: ['fxLayout.gt-sm',] },],
+        'layoutGtMd': [{ type: Input, args: ['fxLayout.gt-md',] },],
+        'layoutGtLg': [{ type: Input, args: ['fxLayout.gt-lg',] },],
+        'layoutLtSm': [{ type: Input, args: ['fxLayout.lt-sm',] },],
+        'layoutLtMd': [{ type: Input, args: ['fxLayout.lt-md',] },],
+        'layoutLtLg': [{ type: Input, args: ['fxLayout.lt-lg',] },],
+        'layoutLtXl': [{ type: Input, args: ['fxLayout.lt-xl',] },],
     };
     return LayoutDirective;
 }(BaseFxDirective));
@@ -1939,32 +1916,32 @@ var LayoutAlignDirective = (function (_super) {
         }
     };
     LayoutAlignDirective.decorators = [
-        { type: _angular_core.Directive, args: [{ selector: "\n  [fxLayoutAlign],\n  [fxLayoutAlign.xs], [fxLayoutAlign.sm], [fxLayoutAlign.md], [fxLayoutAlign.lg],[fxLayoutAlign.xl],\n  [fxLayoutAlign.lt-sm], [fxLayoutAlign.lt-md], [fxLayoutAlign.lt-lg], [fxLayoutAlign.lt-xl],\n  [fxLayoutAlign.gt-xs], [fxLayoutAlign.gt-sm], [fxLayoutAlign.gt-md], [fxLayoutAlign.gt-lg]\n" },] },
+        { type: Directive, args: [{ selector: "\n  [fxLayoutAlign],\n  [fxLayoutAlign.xs], [fxLayoutAlign.sm], [fxLayoutAlign.md], [fxLayoutAlign.lg],[fxLayoutAlign.xl],\n  [fxLayoutAlign.lt-sm], [fxLayoutAlign.lt-md], [fxLayoutAlign.lt-lg], [fxLayoutAlign.lt-xl],\n  [fxLayoutAlign.gt-xs], [fxLayoutAlign.gt-sm], [fxLayoutAlign.gt-md], [fxLayoutAlign.gt-lg]\n" },] },
     ];
     /**
      * @nocollapse
      */
     LayoutAlignDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
-        { type: LayoutDirective, decorators: [{ type: _angular_core.Optional }, { type: _angular_core.Self },] },
+        { type: ElementRef, },
+        { type: Renderer2, },
+        { type: LayoutDirective, decorators: [{ type: Optional }, { type: Self },] },
     ]; };
     LayoutAlignDirective.propDecorators = {
-        'align': [{ type: _angular_core.Input, args: ['fxLayoutAlign',] },],
-        'alignXs': [{ type: _angular_core.Input, args: ['fxLayoutAlign.xs',] },],
-        'alignSm': [{ type: _angular_core.Input, args: ['fxLayoutAlign.sm',] },],
-        'alignMd': [{ type: _angular_core.Input, args: ['fxLayoutAlign.md',] },],
-        'alignLg': [{ type: _angular_core.Input, args: ['fxLayoutAlign.lg',] },],
-        'alignXl': [{ type: _angular_core.Input, args: ['fxLayoutAlign.xl',] },],
-        'alignGtXs': [{ type: _angular_core.Input, args: ['fxLayoutAlign.gt-xs',] },],
-        'alignGtSm': [{ type: _angular_core.Input, args: ['fxLayoutAlign.gt-sm',] },],
-        'alignGtMd': [{ type: _angular_core.Input, args: ['fxLayoutAlign.gt-md',] },],
-        'alignGtLg': [{ type: _angular_core.Input, args: ['fxLayoutAlign.gt-lg',] },],
-        'alignLtSm': [{ type: _angular_core.Input, args: ['fxLayoutAlign.lt-sm',] },],
-        'alignLtMd': [{ type: _angular_core.Input, args: ['fxLayoutAlign.lt-md',] },],
-        'alignLtLg': [{ type: _angular_core.Input, args: ['fxLayoutAlign.lt-lg',] },],
-        'alignLtXl': [{ type: _angular_core.Input, args: ['fxLayoutAlign.lt-xl',] },],
+        'align': [{ type: Input, args: ['fxLayoutAlign',] },],
+        'alignXs': [{ type: Input, args: ['fxLayoutAlign.xs',] },],
+        'alignSm': [{ type: Input, args: ['fxLayoutAlign.sm',] },],
+        'alignMd': [{ type: Input, args: ['fxLayoutAlign.md',] },],
+        'alignLg': [{ type: Input, args: ['fxLayoutAlign.lg',] },],
+        'alignXl': [{ type: Input, args: ['fxLayoutAlign.xl',] },],
+        'alignGtXs': [{ type: Input, args: ['fxLayoutAlign.gt-xs',] },],
+        'alignGtSm': [{ type: Input, args: ['fxLayoutAlign.gt-sm',] },],
+        'alignGtMd': [{ type: Input, args: ['fxLayoutAlign.gt-md',] },],
+        'alignGtLg': [{ type: Input, args: ['fxLayoutAlign.gt-lg',] },],
+        'alignLtSm': [{ type: Input, args: ['fxLayoutAlign.lt-sm',] },],
+        'alignLtMd': [{ type: Input, args: ['fxLayoutAlign.lt-md',] },],
+        'alignLtLg': [{ type: Input, args: ['fxLayoutAlign.lt-lg',] },],
+        'alignLtXl': [{ type: Input, args: ['fxLayoutAlign.lt-xl',] },],
     };
     return LayoutAlignDirective;
 }(BaseFxDirective));
@@ -2253,7 +2230,7 @@ var LayoutGapDirective = (function (_super) {
         return margins;
     };
     LayoutGapDirective.decorators = [
-        { type: _angular_core.Directive, args: [{
+        { type: Directive, args: [{
                     selector: "\n  [fxLayoutGap],\n  [fxLayoutGap.xs], [fxLayoutGap.sm], [fxLayoutGap.md], [fxLayoutGap.lg], [fxLayoutGap.xl],\n  [fxLayoutGap.lt-sm], [fxLayoutGap.lt-md], [fxLayoutGap.lt-lg], [fxLayoutGap.lt-xl],\n  [fxLayoutGap.gt-xs], [fxLayoutGap.gt-sm], [fxLayoutGap.gt-md], [fxLayoutGap.gt-lg]\n"
                 },] },
     ];
@@ -2262,26 +2239,26 @@ var LayoutGapDirective = (function (_super) {
      */
     LayoutGapDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
-        { type: LayoutDirective, decorators: [{ type: _angular_core.Optional }, { type: _angular_core.Self },] },
-        { type: _angular_core.NgZone, },
+        { type: ElementRef, },
+        { type: Renderer2, },
+        { type: LayoutDirective, decorators: [{ type: Optional }, { type: Self },] },
+        { type: NgZone, },
     ]; };
     LayoutGapDirective.propDecorators = {
-        'gap': [{ type: _angular_core.Input, args: ['fxLayoutGap',] },],
-        'gapXs': [{ type: _angular_core.Input, args: ['fxLayoutGap.xs',] },],
-        'gapSm': [{ type: _angular_core.Input, args: ['fxLayoutGap.sm',] },],
-        'gapMd': [{ type: _angular_core.Input, args: ['fxLayoutGap.md',] },],
-        'gapLg': [{ type: _angular_core.Input, args: ['fxLayoutGap.lg',] },],
-        'gapXl': [{ type: _angular_core.Input, args: ['fxLayoutGap.xl',] },],
-        'gapGtXs': [{ type: _angular_core.Input, args: ['fxLayoutGap.gt-xs',] },],
-        'gapGtSm': [{ type: _angular_core.Input, args: ['fxLayoutGap.gt-sm',] },],
-        'gapGtMd': [{ type: _angular_core.Input, args: ['fxLayoutGap.gt-md',] },],
-        'gapGtLg': [{ type: _angular_core.Input, args: ['fxLayoutGap.gt-lg',] },],
-        'gapLtSm': [{ type: _angular_core.Input, args: ['fxLayoutGap.lt-sm',] },],
-        'gapLtMd': [{ type: _angular_core.Input, args: ['fxLayoutGap.lt-md',] },],
-        'gapLtLg': [{ type: _angular_core.Input, args: ['fxLayoutGap.lt-lg',] },],
-        'gapLtXl': [{ type: _angular_core.Input, args: ['fxLayoutGap.lt-xl',] },],
+        'gap': [{ type: Input, args: ['fxLayoutGap',] },],
+        'gapXs': [{ type: Input, args: ['fxLayoutGap.xs',] },],
+        'gapSm': [{ type: Input, args: ['fxLayoutGap.sm',] },],
+        'gapMd': [{ type: Input, args: ['fxLayoutGap.md',] },],
+        'gapLg': [{ type: Input, args: ['fxLayoutGap.lg',] },],
+        'gapXl': [{ type: Input, args: ['fxLayoutGap.xl',] },],
+        'gapGtXs': [{ type: Input, args: ['fxLayoutGap.gt-xs',] },],
+        'gapGtSm': [{ type: Input, args: ['fxLayoutGap.gt-sm',] },],
+        'gapGtMd': [{ type: Input, args: ['fxLayoutGap.gt-md',] },],
+        'gapGtLg': [{ type: Input, args: ['fxLayoutGap.gt-lg',] },],
+        'gapLtSm': [{ type: Input, args: ['fxLayoutGap.lt-sm',] },],
+        'gapLtMd': [{ type: Input, args: ['fxLayoutGap.lt-md',] },],
+        'gapLtLg': [{ type: Input, args: ['fxLayoutGap.lt-lg',] },],
+        'gapLtXl': [{ type: Input, args: ['fxLayoutGap.lt-xl',] },],
     };
     return LayoutGapDirective;
 }(BaseFxDirective));
@@ -2532,32 +2509,32 @@ var LayoutWrapDirective = (function (_super) {
         configurable: true
     });
     LayoutWrapDirective.decorators = [
-        { type: _angular_core.Directive, args: [{ selector: "\n  [fxLayoutWrap], [fxLayoutWrap.xs], [fxLayoutWrap.sm], [fxLayoutWrap.lg], [fxLayoutWrap.xl],\n  [fxLayoutWrap.gt-xs], [fxLayoutWrap.gt-sm], [fxLayoutWrap.gt-md], [fxLayoutWrap.gt-lg],\n  [fxLayoutWrap.lt-xs], [fxLayoutWrap.lt-sm], [fxLayoutWrap.lt-md], [fxLayoutWrap.lt-lg]\n" },] },
+        { type: Directive, args: [{ selector: "\n  [fxLayoutWrap], [fxLayoutWrap.xs], [fxLayoutWrap.sm], [fxLayoutWrap.lg], [fxLayoutWrap.xl],\n  [fxLayoutWrap.gt-xs], [fxLayoutWrap.gt-sm], [fxLayoutWrap.gt-md], [fxLayoutWrap.gt-lg],\n  [fxLayoutWrap.lt-xs], [fxLayoutWrap.lt-sm], [fxLayoutWrap.lt-md], [fxLayoutWrap.lt-lg]\n" },] },
     ];
     /**
      * @nocollapse
      */
     LayoutWrapDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
-        { type: LayoutDirective, decorators: [{ type: _angular_core.Optional }, { type: _angular_core.Self },] },
+        { type: ElementRef, },
+        { type: Renderer2, },
+        { type: LayoutDirective, decorators: [{ type: Optional }, { type: Self },] },
     ]; };
     LayoutWrapDirective.propDecorators = {
-        'wrap': [{ type: _angular_core.Input, args: ['fxLayoutWrap',] },],
-        'wrapXs': [{ type: _angular_core.Input, args: ['fxLayoutWrap.xs',] },],
-        'wrapSm': [{ type: _angular_core.Input, args: ['fxLayoutWrap.sm',] },],
-        'wrapMd': [{ type: _angular_core.Input, args: ['fxLayoutWrap.md',] },],
-        'wrapLg': [{ type: _angular_core.Input, args: ['fxLayoutWrap.lg',] },],
-        'wrapXl': [{ type: _angular_core.Input, args: ['fxLayoutWrap.xl',] },],
-        'wrapGtXs': [{ type: _angular_core.Input, args: ['fxLayoutWrap.gt-xs',] },],
-        'wrapGtSm': [{ type: _angular_core.Input, args: ['fxLayoutWrap.gt-sm',] },],
-        'wrapGtMd': [{ type: _angular_core.Input, args: ['fxLayoutWrap.gt-md',] },],
-        'wrapGtLg': [{ type: _angular_core.Input, args: ['fxLayoutWrap.gt-lg',] },],
-        'wrapLtSm': [{ type: _angular_core.Input, args: ['fxLayoutWrap.lt-sm',] },],
-        'wrapLtMd': [{ type: _angular_core.Input, args: ['fxLayoutWrap.lt-md',] },],
-        'wrapLtLg': [{ type: _angular_core.Input, args: ['fxLayoutWrap.lt-lg',] },],
-        'wrapLtXl': [{ type: _angular_core.Input, args: ['fxLayoutWrap.lt-xl',] },],
+        'wrap': [{ type: Input, args: ['fxLayoutWrap',] },],
+        'wrapXs': [{ type: Input, args: ['fxLayoutWrap.xs',] },],
+        'wrapSm': [{ type: Input, args: ['fxLayoutWrap.sm',] },],
+        'wrapMd': [{ type: Input, args: ['fxLayoutWrap.md',] },],
+        'wrapLg': [{ type: Input, args: ['fxLayoutWrap.lg',] },],
+        'wrapXl': [{ type: Input, args: ['fxLayoutWrap.xl',] },],
+        'wrapGtXs': [{ type: Input, args: ['fxLayoutWrap.gt-xs',] },],
+        'wrapGtSm': [{ type: Input, args: ['fxLayoutWrap.gt-sm',] },],
+        'wrapGtMd': [{ type: Input, args: ['fxLayoutWrap.gt-md',] },],
+        'wrapGtLg': [{ type: Input, args: ['fxLayoutWrap.gt-lg',] },],
+        'wrapLtSm': [{ type: Input, args: ['fxLayoutWrap.lt-sm',] },],
+        'wrapLtMd': [{ type: Input, args: ['fxLayoutWrap.lt-md',] },],
+        'wrapLtLg': [{ type: Input, args: ['fxLayoutWrap.lt-lg',] },],
+        'wrapLtXl': [{ type: Input, args: ['fxLayoutWrap.lt-xl',] },],
     };
     return LayoutWrapDirective;
 }(BaseFxDirective));
@@ -2952,7 +2929,7 @@ var FlexDirective = (function (_super) {
         return extendObject(css, { 'box-sizing': 'border-box' });
     };
     FlexDirective.decorators = [
-        { type: _angular_core.Directive, args: [{ selector: "\n  [fxFlex],\n  [fxFlex.xs], [fxFlex.sm], [fxFlex.md], [fxFlex.lg], [fxFlex.xl],\n  [fxFlex.lt-sm], [fxFlex.lt-md], [fxFlex.lt-lg], [fxFlex.lt-xl],\n  [fxFlex.gt-xs], [fxFlex.gt-sm], [fxFlex.gt-md], [fxFlex.gt-lg],\n"
+        { type: Directive, args: [{ selector: "\n  [fxFlex],\n  [fxFlex.xs], [fxFlex.sm], [fxFlex.md], [fxFlex.lg], [fxFlex.xl],\n  [fxFlex.lt-sm], [fxFlex.lt-md], [fxFlex.lt-lg], [fxFlex.lt-xl],\n  [fxFlex.gt-xs], [fxFlex.gt-sm], [fxFlex.gt-md], [fxFlex.gt-lg],\n"
                 },] },
     ];
     /**
@@ -2960,28 +2937,28 @@ var FlexDirective = (function (_super) {
      */
     FlexDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
-        { type: LayoutDirective, decorators: [{ type: _angular_core.Optional }, { type: _angular_core.SkipSelf },] },
-        { type: LayoutWrapDirective, decorators: [{ type: _angular_core.Optional }, { type: _angular_core.SkipSelf },] },
+        { type: ElementRef, },
+        { type: Renderer2, },
+        { type: LayoutDirective, decorators: [{ type: Optional }, { type: SkipSelf },] },
+        { type: LayoutWrapDirective, decorators: [{ type: Optional }, { type: SkipSelf },] },
     ]; };
     FlexDirective.propDecorators = {
-        'shrink': [{ type: _angular_core.Input, args: ['fxShrink',] },],
-        'grow': [{ type: _angular_core.Input, args: ['fxGrow',] },],
-        'flex': [{ type: _angular_core.Input, args: ['fxFlex',] },],
-        'flexXs': [{ type: _angular_core.Input, args: ['fxFlex.xs',] },],
-        'flexSm': [{ type: _angular_core.Input, args: ['fxFlex.sm',] },],
-        'flexMd': [{ type: _angular_core.Input, args: ['fxFlex.md',] },],
-        'flexLg': [{ type: _angular_core.Input, args: ['fxFlex.lg',] },],
-        'flexXl': [{ type: _angular_core.Input, args: ['fxFlex.xl',] },],
-        'flexGtXs': [{ type: _angular_core.Input, args: ['fxFlex.gt-xs',] },],
-        'flexGtSm': [{ type: _angular_core.Input, args: ['fxFlex.gt-sm',] },],
-        'flexGtMd': [{ type: _angular_core.Input, args: ['fxFlex.gt-md',] },],
-        'flexGtLg': [{ type: _angular_core.Input, args: ['fxFlex.gt-lg',] },],
-        'flexLtSm': [{ type: _angular_core.Input, args: ['fxFlex.lt-sm',] },],
-        'flexLtMd': [{ type: _angular_core.Input, args: ['fxFlex.lt-md',] },],
-        'flexLtLg': [{ type: _angular_core.Input, args: ['fxFlex.lt-lg',] },],
-        'flexLtXl': [{ type: _angular_core.Input, args: ['fxFlex.lt-xl',] },],
+        'shrink': [{ type: Input, args: ['fxShrink',] },],
+        'grow': [{ type: Input, args: ['fxGrow',] },],
+        'flex': [{ type: Input, args: ['fxFlex',] },],
+        'flexXs': [{ type: Input, args: ['fxFlex.xs',] },],
+        'flexSm': [{ type: Input, args: ['fxFlex.sm',] },],
+        'flexMd': [{ type: Input, args: ['fxFlex.md',] },],
+        'flexLg': [{ type: Input, args: ['fxFlex.lg',] },],
+        'flexXl': [{ type: Input, args: ['fxFlex.xl',] },],
+        'flexGtXs': [{ type: Input, args: ['fxFlex.gt-xs',] },],
+        'flexGtSm': [{ type: Input, args: ['fxFlex.gt-sm',] },],
+        'flexGtMd': [{ type: Input, args: ['fxFlex.gt-md',] },],
+        'flexGtLg': [{ type: Input, args: ['fxFlex.gt-lg',] },],
+        'flexLtSm': [{ type: Input, args: ['fxFlex.lt-sm',] },],
+        'flexLtMd': [{ type: Input, args: ['fxFlex.lt-md',] },],
+        'flexLtLg': [{ type: Input, args: ['fxFlex.lt-lg',] },],
+        'flexLtXl': [{ type: Input, args: ['fxFlex.lt-xl',] },],
     };
     return FlexDirective;
 }(BaseFxDirective));
@@ -3196,7 +3173,7 @@ var FlexAlignDirective = (function (_super) {
         return css;
     };
     FlexAlignDirective.decorators = [
-        { type: _angular_core.Directive, args: [{
+        { type: Directive, args: [{
                     selector: "\n  [fxFlexAlign],\n  [fxFlexAlign.xs], [fxFlexAlign.sm], [fxFlexAlign.md], [fxFlexAlign.lg], [fxFlexAlign.xl],\n  [fxFlexAlign.lt-sm], [fxFlexAlign.lt-md], [fxFlexAlign.lt-lg], [fxFlexAlign.lt-xl],\n  [fxFlexAlign.gt-xs], [fxFlexAlign.gt-sm], [fxFlexAlign.gt-md], [fxFlexAlign.gt-lg]\n"
                 },] },
     ];
@@ -3205,24 +3182,24 @@ var FlexAlignDirective = (function (_super) {
      */
     FlexAlignDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
+        { type: ElementRef, },
+        { type: Renderer2, },
     ]; };
     FlexAlignDirective.propDecorators = {
-        'align': [{ type: _angular_core.Input, args: ['fxFlexAlign',] },],
-        'alignXs': [{ type: _angular_core.Input, args: ['fxFlexAlign.xs',] },],
-        'alignSm': [{ type: _angular_core.Input, args: ['fxFlexAlign.sm',] },],
-        'alignMd': [{ type: _angular_core.Input, args: ['fxFlexAlign.md',] },],
-        'alignLg': [{ type: _angular_core.Input, args: ['fxFlexAlign.lg',] },],
-        'alignXl': [{ type: _angular_core.Input, args: ['fxFlexAlign.xl',] },],
-        'alignLtSm': [{ type: _angular_core.Input, args: ['fxFlexAlign.lt-sm',] },],
-        'alignLtMd': [{ type: _angular_core.Input, args: ['fxFlexAlign.lt-md',] },],
-        'alignLtLg': [{ type: _angular_core.Input, args: ['fxFlexAlign.lt-lg',] },],
-        'alignLtXl': [{ type: _angular_core.Input, args: ['fxFlexAlign.lt-xl',] },],
-        'alignGtXs': [{ type: _angular_core.Input, args: ['fxFlexAlign.gt-xs',] },],
-        'alignGtSm': [{ type: _angular_core.Input, args: ['fxFlexAlign.gt-sm',] },],
-        'alignGtMd': [{ type: _angular_core.Input, args: ['fxFlexAlign.gt-md',] },],
-        'alignGtLg': [{ type: _angular_core.Input, args: ['fxFlexAlign.gt-lg',] },],
+        'align': [{ type: Input, args: ['fxFlexAlign',] },],
+        'alignXs': [{ type: Input, args: ['fxFlexAlign.xs',] },],
+        'alignSm': [{ type: Input, args: ['fxFlexAlign.sm',] },],
+        'alignMd': [{ type: Input, args: ['fxFlexAlign.md',] },],
+        'alignLg': [{ type: Input, args: ['fxFlexAlign.lg',] },],
+        'alignXl': [{ type: Input, args: ['fxFlexAlign.xl',] },],
+        'alignLtSm': [{ type: Input, args: ['fxFlexAlign.lt-sm',] },],
+        'alignLtMd': [{ type: Input, args: ['fxFlexAlign.lt-md',] },],
+        'alignLtLg': [{ type: Input, args: ['fxFlexAlign.lt-lg',] },],
+        'alignLtXl': [{ type: Input, args: ['fxFlexAlign.lt-xl',] },],
+        'alignGtXs': [{ type: Input, args: ['fxFlexAlign.gt-xs',] },],
+        'alignGtSm': [{ type: Input, args: ['fxFlexAlign.gt-sm',] },],
+        'alignGtMd': [{ type: Input, args: ['fxFlexAlign.gt-md',] },],
+        'alignGtLg': [{ type: Input, args: ['fxFlexAlign.gt-lg',] },],
     };
     return FlexAlignDirective;
 }(BaseFxDirective));
@@ -3255,15 +3232,15 @@ var FlexFillDirective = (function (_super) {
         return _this;
     }
     FlexFillDirective.decorators = [
-        { type: _angular_core.Directive, args: [{ selector: "\n  [fxFill],\n  [fxFlexFill]\n" },] },
+        { type: Directive, args: [{ selector: "\n  [fxFill],\n  [fxFlexFill]\n" },] },
     ];
     /**
      * @nocollapse
      */
     FlexFillDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
+        { type: ElementRef, },
+        { type: Renderer2, },
     ]; };
     return FlexFillDirective;
 }(BaseFxDirective));
@@ -3514,32 +3491,32 @@ var FlexOffsetDirective = (function (_super) {
         return isFlowHorizontal(layout) ? { 'margin-left': "" + offset } : { 'margin-top': "" + offset };
     };
     FlexOffsetDirective.decorators = [
-        { type: _angular_core.Directive, args: [{ selector: "\n  [fxFlexOffset],\n  [fxFlexOffset.xs], [fxFlexOffset.sm], [fxFlexOffset.md], [fxFlexOffset.lg], [fxFlexOffset.xl],\n  [fxFlexOffset.lt-sm], [fxFlexOffset.lt-md], [fxFlexOffset.lt-lg], [fxFlexOffset.lt-xl],\n  [fxFlexOffset.gt-xs], [fxFlexOffset.gt-sm], [fxFlexOffset.gt-md], [fxFlexOffset.gt-lg]\n" },] },
+        { type: Directive, args: [{ selector: "\n  [fxFlexOffset],\n  [fxFlexOffset.xs], [fxFlexOffset.sm], [fxFlexOffset.md], [fxFlexOffset.lg], [fxFlexOffset.xl],\n  [fxFlexOffset.lt-sm], [fxFlexOffset.lt-md], [fxFlexOffset.lt-lg], [fxFlexOffset.lt-xl],\n  [fxFlexOffset.gt-xs], [fxFlexOffset.gt-sm], [fxFlexOffset.gt-md], [fxFlexOffset.gt-lg]\n" },] },
     ];
     /**
      * @nocollapse
      */
     FlexOffsetDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
-        { type: LayoutDirective, decorators: [{ type: _angular_core.Optional }, { type: _angular_core.SkipSelf },] },
+        { type: ElementRef, },
+        { type: Renderer2, },
+        { type: LayoutDirective, decorators: [{ type: Optional }, { type: SkipSelf },] },
     ]; };
     FlexOffsetDirective.propDecorators = {
-        'offset': [{ type: _angular_core.Input, args: ['fxFlexOffset',] },],
-        'offsetXs': [{ type: _angular_core.Input, args: ['fxFlexOffset.xs',] },],
-        'offsetSm': [{ type: _angular_core.Input, args: ['fxFlexOffset.sm',] },],
-        'offsetMd': [{ type: _angular_core.Input, args: ['fxFlexOffset.md',] },],
-        'offsetLg': [{ type: _angular_core.Input, args: ['fxFlexOffset.lg',] },],
-        'offsetXl': [{ type: _angular_core.Input, args: ['fxFlexOffset.xl',] },],
-        'offsetLtSm': [{ type: _angular_core.Input, args: ['fxFlexOffset.lt-sm',] },],
-        'offsetLtMd': [{ type: _angular_core.Input, args: ['fxFlexOffset.lt-md',] },],
-        'offsetLtLg': [{ type: _angular_core.Input, args: ['fxFlexOffset.lt-lg',] },],
-        'offsetLtXl': [{ type: _angular_core.Input, args: ['fxFlexOffset.lt-xl',] },],
-        'offsetGtXs': [{ type: _angular_core.Input, args: ['fxFlexOffset.gt-xs',] },],
-        'offsetGtSm': [{ type: _angular_core.Input, args: ['fxFlexOffset.gt-sm',] },],
-        'offsetGtMd': [{ type: _angular_core.Input, args: ['fxFlexOffset.gt-md',] },],
-        'offsetGtLg': [{ type: _angular_core.Input, args: ['fxFlexOffset.gt-lg',] },],
+        'offset': [{ type: Input, args: ['fxFlexOffset',] },],
+        'offsetXs': [{ type: Input, args: ['fxFlexOffset.xs',] },],
+        'offsetSm': [{ type: Input, args: ['fxFlexOffset.sm',] },],
+        'offsetMd': [{ type: Input, args: ['fxFlexOffset.md',] },],
+        'offsetLg': [{ type: Input, args: ['fxFlexOffset.lg',] },],
+        'offsetXl': [{ type: Input, args: ['fxFlexOffset.xl',] },],
+        'offsetLtSm': [{ type: Input, args: ['fxFlexOffset.lt-sm',] },],
+        'offsetLtMd': [{ type: Input, args: ['fxFlexOffset.lt-md',] },],
+        'offsetLtLg': [{ type: Input, args: ['fxFlexOffset.lt-lg',] },],
+        'offsetLtXl': [{ type: Input, args: ['fxFlexOffset.lt-xl',] },],
+        'offsetGtXs': [{ type: Input, args: ['fxFlexOffset.gt-xs',] },],
+        'offsetGtSm': [{ type: Input, args: ['fxFlexOffset.gt-sm',] },],
+        'offsetGtMd': [{ type: Input, args: ['fxFlexOffset.gt-md',] },],
+        'offsetGtLg': [{ type: Input, args: ['fxFlexOffset.gt-lg',] },],
     };
     return FlexOffsetDirective;
 }(BaseFxDirective));
@@ -3740,31 +3717,31 @@ var FlexOrderDirective = (function (_super) {
         return { order: isNaN(value) ? 0 : value };
     };
     FlexOrderDirective.decorators = [
-        { type: _angular_core.Directive, args: [{ selector: "\n  [fxFlexOrder],\n  [fxFlexOrder.xs], [fxFlexOrder.sm], [fxFlexOrder.md], [fxFlexOrder.lg], [fxFlexOrder.xl],\n  [fxFlexOrder.lt-sm], [fxFlexOrder.lt-md], [fxFlexOrder.lt-lg], [fxFlexOrder.lt-xl],\n  [fxFlexOrder.gt-xs], [fxFlexOrder.gt-sm], [fxFlexOrder.gt-md], [fxFlexOrder.gt-lg]\n" },] },
+        { type: Directive, args: [{ selector: "\n  [fxFlexOrder],\n  [fxFlexOrder.xs], [fxFlexOrder.sm], [fxFlexOrder.md], [fxFlexOrder.lg], [fxFlexOrder.xl],\n  [fxFlexOrder.lt-sm], [fxFlexOrder.lt-md], [fxFlexOrder.lt-lg], [fxFlexOrder.lt-xl],\n  [fxFlexOrder.gt-xs], [fxFlexOrder.gt-sm], [fxFlexOrder.gt-md], [fxFlexOrder.gt-lg]\n" },] },
     ];
     /**
      * @nocollapse
      */
     FlexOrderDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
+        { type: ElementRef, },
+        { type: Renderer2, },
     ]; };
     FlexOrderDirective.propDecorators = {
-        'order': [{ type: _angular_core.Input, args: ['fxFlexOrder',] },],
-        'orderXs': [{ type: _angular_core.Input, args: ['fxFlexOrder.xs',] },],
-        'orderSm': [{ type: _angular_core.Input, args: ['fxFlexOrder.sm',] },],
-        'orderMd': [{ type: _angular_core.Input, args: ['fxFlexOrder.md',] },],
-        'orderLg': [{ type: _angular_core.Input, args: ['fxFlexOrder.lg',] },],
-        'orderXl': [{ type: _angular_core.Input, args: ['fxFlexOrder.xl',] },],
-        'orderGtXs': [{ type: _angular_core.Input, args: ['fxFlexOrder.gt-xs',] },],
-        'orderGtSm': [{ type: _angular_core.Input, args: ['fxFlexOrder.gt-sm',] },],
-        'orderGtMd': [{ type: _angular_core.Input, args: ['fxFlexOrder.gt-md',] },],
-        'orderGtLg': [{ type: _angular_core.Input, args: ['fxFlexOrder.gt-lg',] },],
-        'orderLtSm': [{ type: _angular_core.Input, args: ['fxFlexOrder.lt-sm',] },],
-        'orderLtMd': [{ type: _angular_core.Input, args: ['fxFlexOrder.lt-md',] },],
-        'orderLtLg': [{ type: _angular_core.Input, args: ['fxFlexOrder.lt-lg',] },],
-        'orderLtXl': [{ type: _angular_core.Input, args: ['fxFlexOrder.lt-xl',] },],
+        'order': [{ type: Input, args: ['fxFlexOrder',] },],
+        'orderXs': [{ type: Input, args: ['fxFlexOrder.xs',] },],
+        'orderSm': [{ type: Input, args: ['fxFlexOrder.sm',] },],
+        'orderMd': [{ type: Input, args: ['fxFlexOrder.md',] },],
+        'orderLg': [{ type: Input, args: ['fxFlexOrder.lg',] },],
+        'orderXl': [{ type: Input, args: ['fxFlexOrder.xl',] },],
+        'orderGtXs': [{ type: Input, args: ['fxFlexOrder.gt-xs',] },],
+        'orderGtSm': [{ type: Input, args: ['fxFlexOrder.gt-sm',] },],
+        'orderGtMd': [{ type: Input, args: ['fxFlexOrder.gt-md',] },],
+        'orderGtLg': [{ type: Input, args: ['fxFlexOrder.gt-lg',] },],
+        'orderLtSm': [{ type: Input, args: ['fxFlexOrder.lt-sm',] },],
+        'orderLtMd': [{ type: Input, args: ['fxFlexOrder.lt-md',] },],
+        'orderLtLg': [{ type: Input, args: ['fxFlexOrder.lt-lg',] },],
+        'orderLtXl': [{ type: Input, args: ['fxFlexOrder.lt-xl',] },],
     };
     return FlexOrderDirective;
 }(BaseFxDirective));
@@ -4137,7 +4114,7 @@ var ClassDirective = (function (_super) {
             // Create an instance NgClass Directive instance only if `ngClass=""` has NOT been defined on
             // the same host element; since the responsive variations may be defined...
             var /** @type {?} */ adapter = new RendererAdapter(this._renderer);
-            this._ngClassInstance = new _angular_common.NgClass(this._iterableDiffers, this._keyValueDiffers, this._ngEl, /** @type {?} */ (adapter));
+            this._ngClassInstance = new NgClass(this._iterableDiffers, this._keyValueDiffers, this._ngEl, /** @type {?} */ (adapter));
         }
     };
     /**
@@ -4158,7 +4135,7 @@ var ClassDirective = (function (_super) {
         });
     };
     ClassDirective.decorators = [
-        { type: _angular_core.Directive, args: [{
+        { type: Directive, args: [{
                     selector: "\n    [ngClass.xs], [ngClass.sm], [ngClass.md], [ngClass.lg], [ngClass.xl],\n    [ngClass.lt-sm], [ngClass.lt-md], [ngClass.lt-lg], [ngClass.lt-xl],\n    [ngClass.gt-xs], [ngClass.gt-sm], [ngClass.gt-md], [ngClass.gt-lg]\n  "
                 },] },
     ];
@@ -4167,28 +4144,28 @@ var ClassDirective = (function (_super) {
      */
     ClassDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_core.IterableDiffers, },
-        { type: _angular_core.KeyValueDiffers, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
-        { type: _angular_common.NgClass, decorators: [{ type: _angular_core.Optional }, { type: _angular_core.Self },] },
+        { type: IterableDiffers, },
+        { type: KeyValueDiffers, },
+        { type: ElementRef, },
+        { type: Renderer2, },
+        { type: NgClass, decorators: [{ type: Optional }, { type: Self },] },
     ]; };
     ClassDirective.propDecorators = {
-        'ngClassBase': [{ type: _angular_core.Input, args: ['ngClass',] },],
-        'klazz': [{ type: _angular_core.Input, args: ['class',] },],
-        'ngClassXs': [{ type: _angular_core.Input, args: ['ngClass.xs',] },],
-        'ngClassSm': [{ type: _angular_core.Input, args: ['ngClass.sm',] },],
-        'ngClassMd': [{ type: _angular_core.Input, args: ['ngClass.md',] },],
-        'ngClassLg': [{ type: _angular_core.Input, args: ['ngClass.lg',] },],
-        'ngClassXl': [{ type: _angular_core.Input, args: ['ngClass.xl',] },],
-        'ngClassLtSm': [{ type: _angular_core.Input, args: ['ngClass.lt-sm',] },],
-        'ngClassLtMd': [{ type: _angular_core.Input, args: ['ngClass.lt-md',] },],
-        'ngClassLtLg': [{ type: _angular_core.Input, args: ['ngClass.lt-lg',] },],
-        'ngClassLtXl': [{ type: _angular_core.Input, args: ['ngClass.lt-xl',] },],
-        'ngClassGtXs': [{ type: _angular_core.Input, args: ['ngClass.gt-xs',] },],
-        'ngClassGtSm': [{ type: _angular_core.Input, args: ['ngClass.gt-sm',] },],
-        'ngClassGtMd': [{ type: _angular_core.Input, args: ['ngClass.gt-md',] },],
-        'ngClassGtLg': [{ type: _angular_core.Input, args: ['ngClass.gt-lg',] },],
+        'ngClassBase': [{ type: Input, args: ['ngClass',] },],
+        'klazz': [{ type: Input, args: ['class',] },],
+        'ngClassXs': [{ type: Input, args: ['ngClass.xs',] },],
+        'ngClassSm': [{ type: Input, args: ['ngClass.sm',] },],
+        'ngClassMd': [{ type: Input, args: ['ngClass.md',] },],
+        'ngClassLg': [{ type: Input, args: ['ngClass.lg',] },],
+        'ngClassXl': [{ type: Input, args: ['ngClass.xl',] },],
+        'ngClassLtSm': [{ type: Input, args: ['ngClass.lt-sm',] },],
+        'ngClassLtMd': [{ type: Input, args: ['ngClass.lt-md',] },],
+        'ngClassLtLg': [{ type: Input, args: ['ngClass.lt-lg',] },],
+        'ngClassLtXl': [{ type: Input, args: ['ngClass.lt-xl',] },],
+        'ngClassGtXs': [{ type: Input, args: ['ngClass.gt-xs',] },],
+        'ngClassGtSm': [{ type: Input, args: ['ngClass.gt-sm',] },],
+        'ngClassGtMd': [{ type: Input, args: ['ngClass.gt-md',] },],
+        'ngClassGtLg': [{ type: Input, args: ['ngClass.gt-lg',] },],
     };
     return ClassDirective;
 }(BaseFxDirective));
@@ -4519,7 +4496,7 @@ var StyleDirective = (function (_super) {
             // Create an instance NgClass Directive instance only if `ngClass=""` has NOT been
             // defined on the same host element; since the responsive variations may be defined...
             var /** @type {?} */ adapter = new RendererAdapter(this._renderer);
-            this._ngStyleInstance = new _angular_common.NgStyle(this._differs, this._ngEl, /** @type {?} */ (adapter));
+            this._ngStyleInstance = new NgStyle(this._differs, this._ngEl, /** @type {?} */ (adapter));
         }
         this._buildCacheInterceptor();
         this._fallbackToStyle();
@@ -4568,7 +4545,7 @@ var StyleDirective = (function (_super) {
         var _this = this;
         var /** @type {?} */ sanitizer = function (val) {
             // Always safe-guard (aka sanitize) style property values
-            return _this._sanitizer.sanitize(_angular_core.SecurityContext.STYLE, val);
+            return _this._sanitizer.sanitize(SecurityContext.STYLE, val);
         };
         if (styles) {
             switch (ngStyleUtils.getType(styles)) {
@@ -4590,7 +4567,7 @@ var StyleDirective = (function (_super) {
         }
     };
     StyleDirective.decorators = [
-        { type: _angular_core.Directive, args: [{
+        { type: Directive, args: [{
                     selector: "\n    [ngStyle.xs], [ngStyle.sm], [ngStyle.md], [ngStyle.lg], [ngStyle.xl],\n    [ngStyle.lt-sm], [ngStyle.lt-md], [ngStyle.lt-lg], [ngStyle.lt-xl],\n    [ngStyle.gt-xs], [ngStyle.gt-sm], [ngStyle.gt-md], [ngStyle.gt-lg]\n  "
                 },] },
     ];
@@ -4599,27 +4576,27 @@ var StyleDirective = (function (_super) {
      */
     StyleDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: _angular_platformBrowser.DomSanitizer, },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
-        { type: _angular_core.KeyValueDiffers, },
-        { type: _angular_common.NgStyle, decorators: [{ type: _angular_core.Optional }, { type: _angular_core.Self },] },
+        { type: DomSanitizer, },
+        { type: ElementRef, },
+        { type: Renderer2, },
+        { type: KeyValueDiffers, },
+        { type: NgStyle, decorators: [{ type: Optional }, { type: Self },] },
     ]; };
     StyleDirective.propDecorators = {
-        'ngStyleBase': [{ type: _angular_core.Input, args: ['ngStyle',] },],
-        'ngStyleXs': [{ type: _angular_core.Input, args: ['ngStyle.xs',] },],
-        'ngStyleSm': [{ type: _angular_core.Input, args: ['ngStyle.sm',] },],
-        'ngStyleMd': [{ type: _angular_core.Input, args: ['ngStyle.md',] },],
-        'ngStyleLg': [{ type: _angular_core.Input, args: ['ngStyle.lg',] },],
-        'ngStyleXl': [{ type: _angular_core.Input, args: ['ngStyle.xl',] },],
-        'ngStyleLtSm': [{ type: _angular_core.Input, args: ['ngStyle.lt-sm',] },],
-        'ngStyleLtMd': [{ type: _angular_core.Input, args: ['ngStyle.lt-md',] },],
-        'ngStyleLtLg': [{ type: _angular_core.Input, args: ['ngStyle.lt-lg',] },],
-        'ngStyleLtXl': [{ type: _angular_core.Input, args: ['ngStyle.lt-xl',] },],
-        'ngStyleGtXs': [{ type: _angular_core.Input, args: ['ngStyle.gt-xs',] },],
-        'ngStyleGtSm': [{ type: _angular_core.Input, args: ['ngStyle.gt-sm',] },],
-        'ngStyleGtMd': [{ type: _angular_core.Input, args: ['ngStyle.gt-md',] },],
-        'ngStyleGtLg': [{ type: _angular_core.Input, args: ['ngStyle.gt-lg',] },],
+        'ngStyleBase': [{ type: Input, args: ['ngStyle',] },],
+        'ngStyleXs': [{ type: Input, args: ['ngStyle.xs',] },],
+        'ngStyleSm': [{ type: Input, args: ['ngStyle.sm',] },],
+        'ngStyleMd': [{ type: Input, args: ['ngStyle.md',] },],
+        'ngStyleLg': [{ type: Input, args: ['ngStyle.lg',] },],
+        'ngStyleXl': [{ type: Input, args: ['ngStyle.xl',] },],
+        'ngStyleLtSm': [{ type: Input, args: ['ngStyle.lt-sm',] },],
+        'ngStyleLtMd': [{ type: Input, args: ['ngStyle.lt-md',] },],
+        'ngStyleLtLg': [{ type: Input, args: ['ngStyle.lt-lg',] },],
+        'ngStyleLtXl': [{ type: Input, args: ['ngStyle.lt-xl',] },],
+        'ngStyleGtXs': [{ type: Input, args: ['ngStyle.gt-xs',] },],
+        'ngStyleGtSm': [{ type: Input, args: ['ngStyle.gt-sm',] },],
+        'ngStyleGtMd': [{ type: Input, args: ['ngStyle.gt-md',] },],
+        'ngStyleGtLg': [{ type: Input, args: ['ngStyle.gt-lg',] },],
     };
     return StyleDirective;
 }(BaseFxDirective));
@@ -5015,7 +4992,7 @@ var ShowHideDirective = (function (_super) {
         return (FALSY.indexOf(show) == -1);
     };
     ShowHideDirective.decorators = [
-        { type: _angular_core.Directive, args: [{
+        { type: Directive, args: [{
                     selector: "\n  [fxShow],\n  [fxShow.xs], [fxShow.sm], [fxShow.md], [fxShow.lg], [fxShow.xl],\n  [fxShow.lt-sm], [fxShow.lt-md], [fxShow.lt-lg], [fxShow.lt-xl],\n  [fxShow.gt-xs], [fxShow.gt-sm], [fxShow.gt-md], [fxShow.gt-lg],\n  [fxHide],\n  [fxHide.xs], [fxHide.sm], [fxHide.md], [fxHide.lg], [fxHide.xl],\n  [fxHide.lt-sm], [fxHide.lt-md], [fxHide.lt-lg], [fxHide.lt-xl],\n  [fxHide.gt-xs], [fxHide.gt-sm], [fxHide.gt-md], [fxHide.gt-lg]\n"
                 },] },
     ];
@@ -5024,39 +5001,39 @@ var ShowHideDirective = (function (_super) {
      */
     ShowHideDirective.ctorParameters = function () { return [
         { type: MediaMonitor, },
-        { type: LayoutDirective, decorators: [{ type: _angular_core.Optional }, { type: _angular_core.Self },] },
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
+        { type: LayoutDirective, decorators: [{ type: Optional }, { type: Self },] },
+        { type: ElementRef, },
+        { type: Renderer2, },
     ]; };
     ShowHideDirective.propDecorators = {
-        'show': [{ type: _angular_core.Input, args: ['fxShow',] },],
-        'showXs': [{ type: _angular_core.Input, args: ['fxShow.xs',] },],
-        'showSm': [{ type: _angular_core.Input, args: ['fxShow.sm',] },],
-        'showMd': [{ type: _angular_core.Input, args: ['fxShow.md',] },],
-        'showLg': [{ type: _angular_core.Input, args: ['fxShow.lg',] },],
-        'showXl': [{ type: _angular_core.Input, args: ['fxShow.xl',] },],
-        'showLtSm': [{ type: _angular_core.Input, args: ['fxShow.lt-sm',] },],
-        'showLtMd': [{ type: _angular_core.Input, args: ['fxShow.lt-md',] },],
-        'showLtLg': [{ type: _angular_core.Input, args: ['fxShow.lt-lg',] },],
-        'showLtXl': [{ type: _angular_core.Input, args: ['fxShow.lt-xl',] },],
-        'showGtXs': [{ type: _angular_core.Input, args: ['fxShow.gt-xs',] },],
-        'showGtSm': [{ type: _angular_core.Input, args: ['fxShow.gt-sm',] },],
-        'showGtMd': [{ type: _angular_core.Input, args: ['fxShow.gt-md',] },],
-        'showGtLg': [{ type: _angular_core.Input, args: ['fxShow.gt-lg',] },],
-        'hide': [{ type: _angular_core.Input, args: ['fxHide',] },],
-        'hideXs': [{ type: _angular_core.Input, args: ['fxHide.xs',] },],
-        'hideSm': [{ type: _angular_core.Input, args: ['fxHide.sm',] },],
-        'hideMd': [{ type: _angular_core.Input, args: ['fxHide.md',] },],
-        'hideLg': [{ type: _angular_core.Input, args: ['fxHide.lg',] },],
-        'hideXl': [{ type: _angular_core.Input, args: ['fxHide.xl',] },],
-        'hideLtSm': [{ type: _angular_core.Input, args: ['fxHide.lt-sm',] },],
-        'hideLtMd': [{ type: _angular_core.Input, args: ['fxHide.lt-md',] },],
-        'hideLtLg': [{ type: _angular_core.Input, args: ['fxHide.lt-lg',] },],
-        'hideLtXl': [{ type: _angular_core.Input, args: ['fxHide.lt-xl',] },],
-        'hideGtXs': [{ type: _angular_core.Input, args: ['fxHide.gt-xs',] },],
-        'hideGtSm': [{ type: _angular_core.Input, args: ['fxHide.gt-sm',] },],
-        'hideGtMd': [{ type: _angular_core.Input, args: ['fxHide.gt-md',] },],
-        'hideGtLg': [{ type: _angular_core.Input, args: ['fxHide.gt-lg',] },],
+        'show': [{ type: Input, args: ['fxShow',] },],
+        'showXs': [{ type: Input, args: ['fxShow.xs',] },],
+        'showSm': [{ type: Input, args: ['fxShow.sm',] },],
+        'showMd': [{ type: Input, args: ['fxShow.md',] },],
+        'showLg': [{ type: Input, args: ['fxShow.lg',] },],
+        'showXl': [{ type: Input, args: ['fxShow.xl',] },],
+        'showLtSm': [{ type: Input, args: ['fxShow.lt-sm',] },],
+        'showLtMd': [{ type: Input, args: ['fxShow.lt-md',] },],
+        'showLtLg': [{ type: Input, args: ['fxShow.lt-lg',] },],
+        'showLtXl': [{ type: Input, args: ['fxShow.lt-xl',] },],
+        'showGtXs': [{ type: Input, args: ['fxShow.gt-xs',] },],
+        'showGtSm': [{ type: Input, args: ['fxShow.gt-sm',] },],
+        'showGtMd': [{ type: Input, args: ['fxShow.gt-md',] },],
+        'showGtLg': [{ type: Input, args: ['fxShow.gt-lg',] },],
+        'hide': [{ type: Input, args: ['fxHide',] },],
+        'hideXs': [{ type: Input, args: ['fxHide.xs',] },],
+        'hideSm': [{ type: Input, args: ['fxHide.sm',] },],
+        'hideMd': [{ type: Input, args: ['fxHide.md',] },],
+        'hideLg': [{ type: Input, args: ['fxHide.lg',] },],
+        'hideXl': [{ type: Input, args: ['fxHide.xl',] },],
+        'hideLtSm': [{ type: Input, args: ['fxHide.lt-sm',] },],
+        'hideLtMd': [{ type: Input, args: ['fxHide.lt-md',] },],
+        'hideLtLg': [{ type: Input, args: ['fxHide.lt-lg',] },],
+        'hideLtXl': [{ type: Input, args: ['fxHide.lt-xl',] },],
+        'hideGtXs': [{ type: Input, args: ['fxHide.gt-xs',] },],
+        'hideGtSm': [{ type: Input, args: ['fxHide.gt-sm',] },],
+        'hideGtMd': [{ type: Input, args: ['fxHide.gt-md',] },],
+        'hideGtLg': [{ type: Input, args: ['fxHide.gt-lg',] },],
     };
     return ShowHideDirective;
 }(BaseFxDirective));
@@ -5282,7 +5259,7 @@ var ImgSrcDirective = (function (_super) {
         configurable: true
     });
     ImgSrcDirective.decorators = [
-        { type: _angular_core.Directive, args: [{
+        { type: Directive, args: [{
                     selector: "\n  img[src.xs],    img[src.sm],    img[src.md],    img[src.lg],   img[src.xl],\n  img[src.lt-sm], img[src.lt-md], img[src.lt-lg], img[src.lt-xl],\n  img[src.gt-xs], img[src.gt-sm], img[src.gt-md], img[src.gt-lg]\n"
                 },] },
     ];
@@ -5290,25 +5267,25 @@ var ImgSrcDirective = (function (_super) {
      * @nocollapse
      */
     ImgSrcDirective.ctorParameters = function () { return [
-        { type: _angular_core.ElementRef, },
-        { type: _angular_core.Renderer2, },
+        { type: ElementRef, },
+        { type: Renderer2, },
         { type: MediaMonitor, },
     ]; };
     ImgSrcDirective.propDecorators = {
-        'srcBase': [{ type: _angular_core.Input, args: ['src',] },],
-        'srcXs': [{ type: _angular_core.Input, args: ['src.xs',] },],
-        'srcSm': [{ type: _angular_core.Input, args: ['src.sm',] },],
-        'srcMd': [{ type: _angular_core.Input, args: ['src.md',] },],
-        'srcLg': [{ type: _angular_core.Input, args: ['src.lg',] },],
-        'srcXl': [{ type: _angular_core.Input, args: ['src.xl',] },],
-        'srcLtSm': [{ type: _angular_core.Input, args: ['src.lt-sm',] },],
-        'srcLtMd': [{ type: _angular_core.Input, args: ['src.lt-md',] },],
-        'srcLtLg': [{ type: _angular_core.Input, args: ['src.lt-lg',] },],
-        'srcLtXl': [{ type: _angular_core.Input, args: ['src.lt-xl',] },],
-        'srcGtXs': [{ type: _angular_core.Input, args: ['src.gt-xs',] },],
-        'srcGtSm': [{ type: _angular_core.Input, args: ['src.gt-sm',] },],
-        'srcGtMd': [{ type: _angular_core.Input, args: ['src.gt-md',] },],
-        'srcGtLg': [{ type: _angular_core.Input, args: ['src.gt-lg',] },],
+        'srcBase': [{ type: Input, args: ['src',] },],
+        'srcXs': [{ type: Input, args: ['src.xs',] },],
+        'srcSm': [{ type: Input, args: ['src.sm',] },],
+        'srcMd': [{ type: Input, args: ['src.md',] },],
+        'srcLg': [{ type: Input, args: ['src.lg',] },],
+        'srcXl': [{ type: Input, args: ['src.xl',] },],
+        'srcLtSm': [{ type: Input, args: ['src.lt-sm',] },],
+        'srcLtMd': [{ type: Input, args: ['src.lt-md',] },],
+        'srcLtLg': [{ type: Input, args: ['src.lt-lg',] },],
+        'srcLtXl': [{ type: Input, args: ['src.lt-xl',] },],
+        'srcGtXs': [{ type: Input, args: ['src.gt-xs',] },],
+        'srcGtSm': [{ type: Input, args: ['src.gt-sm',] },],
+        'srcGtMd': [{ type: Input, args: ['src.gt-md',] },],
+        'srcGtLg': [{ type: Input, args: ['src.gt-lg',] },],
     };
     return ImgSrcDirective;
 }(BaseFxDirective));
@@ -5560,7 +5537,7 @@ var MediaService = (function () {
          * Inject associated (if any) alias information into the MediaChange event
          * Exclude mediaQuery activations for overlapping mQs. List bounded mQ ranges only
          */
-        return media$.pipe(rxjs_operators.filter(activationsOnly), rxjs_operators.filter(excludeOverlaps), rxjs_operators.map(addAliasInformation));
+        return media$.pipe(filter(activationsOnly), filter(excludeOverlaps), map(addAliasInformation));
     };
     /**
      * Breakpoint locator by alias
@@ -5588,7 +5565,7 @@ var MediaService = (function () {
         return bp ? bp.mediaQuery : query;
     };
     MediaService.decorators = [
-        { type: _angular_core.Injectable },
+        { type: Injectable },
     ];
     /**
      * @nocollapse
@@ -5731,7 +5708,7 @@ function OBSERVABLE_MEDIA_PROVIDER_FACTORY(parentService, matchMedia, breakpoint
 var OBSERVABLE_MEDIA_PROVIDER = {
     provide: ObservableMedia,
     deps: [
-        [new _angular_core.Optional(), new _angular_core.SkipSelf(), ObservableMedia],
+        [new Optional(), new SkipSelf(), ObservableMedia],
         MatchMedia,
         BreakPointRegistry
     ],
@@ -5754,7 +5731,7 @@ function MEDIA_MONITOR_PROVIDER_FACTORY(parentMonitor, breakpoints, matchMedia) 
 var MEDIA_MONITOR_PROVIDER = {
     provide: MediaMonitor,
     deps: [
-        [new _angular_core.Optional(), new _angular_core.SkipSelf(), MediaMonitor],
+        [new Optional(), new SkipSelf(), MediaMonitor],
         BreakPointRegistry,
         MatchMedia,
     ],
@@ -5770,7 +5747,7 @@ var MediaQueriesModule = (function () {
     function MediaQueriesModule() {
     }
     MediaQueriesModule.decorators = [
-        { type: _angular_core.NgModule, args: [{
+        { type: NgModule, args: [{
                     providers: [
                         DEFAULT_BREAKPOINTS_PROVIDER,
                         BreakPointRegistry,
@@ -5834,7 +5811,7 @@ var FlexLayoutModule = (function () {
         };
     };
     FlexLayoutModule.decorators = [
-        { type: _angular_core.NgModule, args: [{
+        { type: NgModule, args: [{
                     imports: [MediaQueriesModule],
                     exports: [MediaQueriesModule].concat(ALL_DIRECTIVES),
                     declarations: ALL_DIRECTIVES.slice(),
@@ -5852,62 +5829,9 @@ var FlexLayoutModule = (function () {
     return FlexLayoutModule;
 }());
 
-exports.VERSION = VERSION;
-exports.BaseFxDirective = BaseFxDirective;
-exports.BaseFxDirectiveAdapter = BaseFxDirectiveAdapter;
-exports.KeyOptions = KeyOptions;
-exports.ResponsiveActivation = ResponsiveActivation;
-exports.LayoutDirective = LayoutDirective;
-exports.LayoutAlignDirective = LayoutAlignDirective;
-exports.LayoutGapDirective = LayoutGapDirective;
-exports.LayoutWrapDirective = LayoutWrapDirective;
-exports.FlexDirective = FlexDirective;
-exports.FlexAlignDirective = FlexAlignDirective;
-exports.FlexFillDirective = FlexFillDirective;
-exports.FlexOffsetDirective = FlexOffsetDirective;
-exports.FlexOrderDirective = FlexOrderDirective;
-exports.ClassDirective = ClassDirective;
-exports.StyleDirective = StyleDirective;
-exports.negativeOf = negativeOf;
-exports.ShowHideDirective = ShowHideDirective;
-exports.ImgSrcDirective = ImgSrcDirective;
-exports.RESPONSIVE_ALIASES = RESPONSIVE_ALIASES;
-exports.DEFAULT_BREAKPOINTS = DEFAULT_BREAKPOINTS;
-exports.ScreenTypes = ScreenTypes;
-exports.ORIENTATION_BREAKPOINTS = ORIENTATION_BREAKPOINTS;
-exports.BREAKPOINTS = BREAKPOINTS;
-exports.BreakPointRegistry = BreakPointRegistry;
-exports.ObservableMedia = ObservableMedia;
-exports.MediaService = MediaService;
-exports.MatchMedia = MatchMedia;
-exports.isBrowser = isBrowser;
-exports.MediaChange = MediaChange;
-exports.MediaMonitor = MediaMonitor;
-exports.buildMergedBreakPoints = buildMergedBreakPoints;
-exports.DEFAULT_BREAKPOINTS_PROVIDER_FACTORY = DEFAULT_BREAKPOINTS_PROVIDER_FACTORY;
-exports.DEFAULT_BREAKPOINTS_PROVIDER = DEFAULT_BREAKPOINTS_PROVIDER;
-exports.CUSTOM_BREAKPOINTS_PROVIDER_FACTORY = CUSTOM_BREAKPOINTS_PROVIDER_FACTORY;
-exports.OBSERVABLE_MEDIA_PROVIDER_FACTORY = OBSERVABLE_MEDIA_PROVIDER_FACTORY;
-exports.OBSERVABLE_MEDIA_PROVIDER = OBSERVABLE_MEDIA_PROVIDER;
-exports.MEDIA_MONITOR_PROVIDER_FACTORY = MEDIA_MONITOR_PROVIDER_FACTORY;
-exports.MEDIA_MONITOR_PROVIDER = MEDIA_MONITOR_PROVIDER;
-exports.MediaQueriesModule = MediaQueriesModule;
-exports.mergeAlias = mergeAlias;
-exports.applyCssPrefixes = applyCssPrefixes;
-exports.validateBasis = validateBasis;
-exports.LAYOUT_VALUES = LAYOUT_VALUES;
-exports.buildLayoutCSS = buildLayoutCSS;
-exports.validateValue = validateValue;
-exports.isFlowHorizontal = isFlowHorizontal;
-exports.validateWrapValue = validateWrapValue;
-exports.validateSuffixes = validateSuffixes;
-exports.mergeByAlias = mergeByAlias;
-exports.extendObject = extendObject;
-exports.NgStyleKeyValue = NgStyleKeyValue;
-exports.ngStyleUtils = ngStyleUtils;
-exports.FlexLayoutModule = FlexLayoutModule;
+/**
+ * Generated bundle index. Do not edit.
+ */
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
-})));
-//# sourceMappingURL=flex-layout.umd.js.map
+export { VERSION, BaseFxDirective, BaseFxDirectiveAdapter, KeyOptions, ResponsiveActivation, LayoutDirective, LayoutAlignDirective, LayoutGapDirective, LayoutWrapDirective, FlexDirective, FlexAlignDirective, FlexFillDirective, FlexOffsetDirective, FlexOrderDirective, ClassDirective, StyleDirective, negativeOf, ShowHideDirective, ImgSrcDirective, RESPONSIVE_ALIASES, DEFAULT_BREAKPOINTS, ScreenTypes, ORIENTATION_BREAKPOINTS, BREAKPOINTS, BreakPointRegistry, ObservableMedia, MediaService, MatchMedia, isBrowser, MediaChange, MediaMonitor, buildMergedBreakPoints, DEFAULT_BREAKPOINTS_PROVIDER_FACTORY, DEFAULT_BREAKPOINTS_PROVIDER, CUSTOM_BREAKPOINTS_PROVIDER_FACTORY, OBSERVABLE_MEDIA_PROVIDER_FACTORY, OBSERVABLE_MEDIA_PROVIDER, MEDIA_MONITOR_PROVIDER_FACTORY, MEDIA_MONITOR_PROVIDER, MediaQueriesModule, mergeAlias, applyCssPrefixes, validateBasis, LAYOUT_VALUES, buildLayoutCSS, validateValue, isFlowHorizontal, validateWrapValue, validateSuffixes, mergeByAlias, extendObject, NgStyleKeyValue, ngStyleUtils, FlexLayoutModule };
+//# sourceMappingURL=flex-layout.es5.js.map
